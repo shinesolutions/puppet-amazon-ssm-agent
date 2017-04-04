@@ -1,0 +1,17 @@
+{
+  "name": "shinesolutions/amazon_ssm_agent",
+  "version": "0.9.0",
+  "author": "Andy Wang <andy.wang@shinesolutions.com>",
+  "summary": "Puppet module for managing Amazon System Manager Agent(ssm agent)",
+  "license": "Apache-2.0",
+  "source": "https://github.com/shinesolutions/amazon_ssm_agent.git",
+  "project_page": "https://github.com/shinesolutions/amazon_ssm_agent",
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": "hiera",
+  "requirements": [
+    { "name": "puppet", "version_requirement": ">=4.4.0 <5.0.0" }
+  ]
+}

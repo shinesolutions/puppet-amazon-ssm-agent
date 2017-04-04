@@ -1,0 +1,7 @@
+---
+
+amazon_ssm_agent::pkg_provider: rpm
+amazon_ssm_agent::pkg_format: rpm
+amazon_ssm_agent::flavor: linux
+
+amazon_ssm_agent::srv_provider: upstart
