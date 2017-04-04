@@ -23,12 +23,12 @@ puppet module install shinesolutions/amazon_ssm_agent
 ## Usage
 
 ```
-class amazon_ssm_agent
+class amazon-ssm-agent
 ```
 or specifying an AWS Region to download the latest package:
 
 ```
-class amazon-ssm-agent {
+class amazon_ssm_agent {
   region => 'ap-southeast-2',
 }
 ```
@@ -40,4 +40,4 @@ amazon_ssm_agent
 
 ## Limitations
 
-The module is still under active development and test. 
+The module is still under active development and test.

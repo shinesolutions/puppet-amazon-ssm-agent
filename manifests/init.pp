@@ -60,12 +60,12 @@ class amazon_ssm_agent (
       }
     }
 
-    package { 'amazon_ssm_agent':
-      ensure   => present,
+    package { 'amazon-ssm-agent':
+      ensure   => latest,
       provider => $pkg_provider,
       source   => "https://s3.${region}.amazonaws.com/amazon-ssm-${region}/latest/${flavor}_${architecture}/amazon-ssm-agent.${pkg_format}",
     } ~>
-    service { 'amazon_ssm_agent':
+    service { 'amazon-ssm-agent':
       ensure   => running,
       enable   => true,
       provider => $srv_provider,
