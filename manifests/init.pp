@@ -48,8 +48,8 @@ class amazon_ssm_agent (
 
     $srv_provider = lookup('amazon_ssm_agent::srv_provider', String, 'first')
 
-    case $facts['architecture'] {
-      'x86_64': {
+    case $facts['os']['architecture'] {
+      'x86_64','amd64': {
         $architecture = 'amd64'
       }
       'i386': {
@@ -60,15 +60,24 @@ class amazon_ssm_agent (
       }
     }
 
+    archive {"/tmp/amazon-ssm-agent.${pkg_format}":
+      ensure   => present,
+      extract  => false,
+      cleanup  => false,
+      source   => "https://amazon-ssm-${region}.s3.amazonaws.com/latest/${flavor}_${architecture}/amazon-ssm-agent.${pkg_format}",
+      creates  => $path,
+      #creates  => "/tmp/amazon-ssm-agent.${pkg_format}",
+    } ->
     package { 'amazon-ssm-agent':
       ensure   => latest,
       provider => $pkg_provider,
-      source   => "https://s3.${region}.amazonaws.com/amazon-ssm-${region}/latest/${flavor}_${architecture}/amazon-ssm-agent.${pkg_format}",
+      source   => "/tmp/amazon-ssm-agent.${pkg_format}",
     } ~>
     service { 'amazon-ssm-agent':
       ensure   => running,
       enable   => true,
       provider => $srv_provider,
     }
+
 
 }
