@@ -79,5 +79,8 @@ class amazon_ssm_agent (
       provider => $srv_provider,
     }
 
-
+    file {"/tmp/amazon-ssm-agent.${pkg_format}":
+      ensure  => absent,
+      require => Package['amazon-ssm-agent'],
+    }
 }
