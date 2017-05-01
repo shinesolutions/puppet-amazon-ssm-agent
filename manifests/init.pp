@@ -1,4 +1,4 @@
-# Class: amz_ssm_agent
+# Class: amazon_ssm_agent
 # ===========================
 #
 # Download and install Amazon System Management Agent, amazon-ssm-agent.
@@ -40,6 +40,8 @@
 #
 class amazon_ssm_agent (
   $region   = 'us-east-1',
+  $proxy_host   = undef,
+  $proxy_port   = '443',
   ) {
 
     $pkg_provider = lookup('amazon_ssm_agent::pkg_provider', String, 'first')
@@ -56,27 +58,77 @@ class amazon_ssm_agent (
         $architecture = '386'
       }
       default: {
-        fail("Module not support on ${facts['architecture']}")
+        fail("Module not supported on ${facts['os']['architecture']}")
       }
     }
 
     archive {"/tmp/amazon-ssm-agent.${pkg_format}":
-      ensure   => present,
-      extract  => false,
-      cleanup  => false,
-      source   => "https://amazon-ssm-${region}.s3.amazonaws.com/latest/${flavor}_${architecture}/amazon-ssm-agent.${pkg_format}",
-      creates  => $path,
-      #creates  => "/tmp/amazon-ssm-agent.${pkg_format}",
-    } ->
-    package { 'amazon-ssm-agent':
+      ensure  => present,
+      extract => false,
+      cleanup => false,
+      source  => "https://amazon-ssm-${region}.s3.amazonaws.com/latest/${flavor}_${architecture}/amazon-ssm-agent.${pkg_format}",
+      creates => "/tmp/amazon-ssm-agent.${pkg_format}",
+    }
+    -> package { 'amazon-ssm-agent':
       ensure   => latest,
       provider => $pkg_provider,
       source   => "/tmp/amazon-ssm-agent.${pkg_format}",
-    } ~>
+    }
+
+
+    case $srv_provider {
+      'upstart': {
+        $config_file = '/etc/init/amazon-ssm-agent.conf'
+        $proxy_line = "env http_proxy=http://${proxy_host}:${proxy_port}"
+        $match_expr = '^env http_proxy=.*$'
+        $no_proxy_line = 'env no_proxy=169.254.169.254'
+      }
+      'systemd': {
+        $config_file = '/etc/systemd/system/amazon-ssm-agent.service'
+        $proxy_line = "Environment=\"HTTP_PROXY=http://${proxy_host}:${proxy_port}\""
+        $match_expr = '^Environment=\"HTTP_PROXY=.*$'
+        $no_proxy_line = 'Environment="no_proxy=169.254.169.254"'
+      }
+      default: {
+        fail("Module does not support ${srv_provider} service provider")
+      }
+    }
+
+    if $proxy_host {
+      file_line { 'proxy':
+        ensure  => present,
+        path    => $config_file,
+        line    => $proxy_line,
+        match   => $match_expr,
+        replace => true,
+        require => Package['amazon-ssm-agent'],
+      }
+      -> file_line {'no_proxy':
+        ensure => present,
+        path   => $config_file,
+        line   => $no_proxy_line,
+      }
+    }
+    else {
+      file_line {'proxy':
+        ensure            => absent,
+        path              => $config_file,
+        match             => $match_expr,
+        match_for_absence => true,
+        require           => Package['amazon-ssm-agent']
+      }
+      -> file_line {'no_proxy':
+        ensure => absent,
+        path   => $config_file,
+        line   => $no_proxy_line,
+      }
+    }
+
     service { 'amazon-ssm-agent':
-      ensure   => running,
-      enable   => true,
-      provider => $srv_provider,
+      ensure    => running,
+      enable    => true,
+      provider  => $srv_provider,
+      subscribe => File_line['proxy']
     }
 
     file {"/tmp/amazon-ssm-agent.${pkg_format}":
