@@ -6,25 +6,25 @@
 # Parameters
 # ----------
 #
-# Document parameters here.
-#
-# * `sample parameter`
-# Explanation of what this parameter affects and what it defaults to.
-# e.g. "Specify one or more upstream ntp servers as an array."
-#
-# Variables
-# ----------
-#
-# Here you should define a list of variables that this module would require.
-#
 # * `region`
-#  The AWS region from where the package will be downloaded
+# Data Type: String
+# The AWS region from where the package will be downloaded
+# Default value: us-east-1
+#
+# * `proxy_host`
+# Data Type: String
+# The name of the proxy host if the ssm agent needs to communicate via a proxy
+# Default value: undef
+#
+# * `proxy_port`
+# Data Type: String
+# The port number of the proxy host if the ssm agent needs to communicate via a proxy
+# Default value: 443
 #
 # Examples
 # --------
-#
 # @example
-#    class { 'amz_ssm_agent':
+#    class { 'amazon_ssm_agent':
 #      region => 'ap-southeast-2',
 #    }
 #

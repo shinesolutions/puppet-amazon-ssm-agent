@@ -1,9 +1,6 @@
 fixtures:
-  symlinks:
-    nginx: "#{source_dir}"
   forge_modules:
     archive:
       repo: "puppet/archive"
     stdlib:
       repo: "puppetlabs/stdlib"
-

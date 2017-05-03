@@ -1,10 +1,10 @@
-# amz_ssm_agent
+# amazon_ssm_agent
 
 #### Table of Contents
 
 1. [Description](#description)
 1. [Setup - The basics of getting started with amazon_ssm_agent](#setup)
-    * [Beginning with amazon_ssm_agent](#beginning-with-amz_ssm_agent)
+    * [Beginning with amazon_ssm_agent](#beginning-with-amazon_ssm_agent)
 1. [Usage - Configuration options and additional functionality](#usage)
 1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 1. [Limitations - OS compatibility, etc.](#limitations)
@@ -12,24 +12,35 @@
 
 ## Description
 
-
 Download and install Amazon System Management Agent, i.e., amazon-ssm-agent package.
 
 ## Setup
 
-### Beginning with amzaon_ssm_agent -- Installtion
-puppet module install shinesolutions/amazon_ssm_agent
+### Beginning with amazaon_ssm_agent -- Installation
+put the following line in your Puppetfile
+```
+mod 'shinesolutions/amazon_ssm_agent', :git => 'https://github.com/shinesolutions/amazon_ssm_agent.git'
+```
 
 ## Usage
+For the simplest scenario, the following will download and install the latest package:
+```
+include amazon_ssm_agent
+```
+or specifying an AWS Region that is closest to you:
 
 ```
-class amazon_ssm_agent
-```
-or specifying an AWS Region to download the latest package:
-
-```
-class amazon_ssm_agent {
+class {'amazon_ssm_agent':
   region => 'ap-southeast-2',
+}
+```
+
+When the ssm agent has to communicate with Amazon EC2 System Manager Service via a proxy.
+```
+class {'amazon_ssm_agent':
+  region     => 'ap-southeast-2',
+  proxy_host => 'proxy.shinesolutions.com',
+  proxy_port => '443'
 }
 ```
 
@@ -40,4 +51,5 @@ amazon_ssm_agent
 
 ## Limitations
 
-The module is still under active development and test.
+The module is still under active development and test. Currently there are no plan to support
+platforms other than Amazon Linux, RedHat, CentOS, and Ubuntu.
