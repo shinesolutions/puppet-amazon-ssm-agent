@@ -94,7 +94,7 @@ class amazon_ssm_agent (
       }
     }
 
-    if $proxy_host {
+    if defined('$proxy_host') {
       file_line { 'proxy':
         ensure  => present,
         path    => $config_file,
