@@ -14,7 +14,6 @@ lint:
 		--no-140chars-check \
 		--no-autoloader_layout-check \
 		--no-documentation-check \
-		test/integration/*/*.pp \
 		manifests/*.pp
 
 package:
