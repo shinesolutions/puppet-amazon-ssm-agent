@@ -7,6 +7,7 @@ deps:
 
 clean:
 	rm -rf pkg
+	rm -f Gemfile.lock
 
 lint:
 	puppet-lint \
