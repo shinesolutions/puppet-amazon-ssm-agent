@@ -11,21 +11,18 @@
 # The AWS region from where the package will be downloaded
 # Default value: us-east-1
 #
-# * `proxy_host`
+# * `proxy_url`
 # Data Type: String
-# The name of the proxy host if the ssm agent needs to communicate via a proxy
+# The proxy URL in <protocol>://<host>:<port> format, specify if the ssm agent needs to communicate via a proxy
 # Default value: undef
 #
-# * `proxy_port`
-# Data Type: String
-# The port number of the proxy host if the ssm agent needs to communicate via a proxy
-# Default value: 443
 #
 # Examples
 # --------
 # @example
 #    class { 'amazon_ssm_agent':
-#      region => 'ap-southeast-2',
+#      region    => 'ap-southeast-2',
+#      proxy_url => 'http://someproxy:3128',
 #    }
 #
 # Authors
@@ -38,10 +35,39 @@
 #
 # Copyright 2017 Shine Solutions, unless otherwise noted.
 #
+function amazon_ssm_agent::get_proxy_line(String $srv_provider, String $key, String $value) {
+
+  case $srv_provider {
+    'upstart': {
+      "env ${key}=${value}"
+    }
+    'systemd': {
+      "Environment=\"${key}=${value}\""
+    }
+    default: {
+      fail("Module not supported on ${srv_provider} service")
+    }
+  }
+}
+
+function amazon_ssm_agent::get_proxy_match(String $srv_provider, String $key) {
+
+  case $srv_provider {
+    'upstart': {
+      "^env ${key}=.*$"
+    }
+    'systemd': {
+      "^Environment=\"${key}=.*$"
+    }
+    default: {
+      fail("Module not supported on ${srv_provider} service")
+    }
+  }
+}
+
 class amazon_ssm_agent (
-  $region   = 'us-east-1',
-  $proxy_host   = undef,
-  $proxy_port   = '443',
+  $region    = 'us-east-1',
+  $proxy_url = undef,
   ) {
 
     $pkg_provider = lookup('amazon_ssm_agent::pkg_provider', String, 'first')
@@ -58,7 +84,7 @@ class amazon_ssm_agent (
         $architecture = '386'
       }
       default: {
-        fail("Module not supported on ${facts['os']['architecture']}")
+        fail("Module not supported on ${facts['os']['architecture']} architecture")
       }
     }
 
@@ -68,59 +94,57 @@ class amazon_ssm_agent (
       cleanup => false,
       source  => "https://amazon-ssm-${region}.s3.amazonaws.com/latest/${flavor}_${architecture}/amazon-ssm-agent.${pkg_format}",
       creates => "/tmp/amazon-ssm-agent.${pkg_format}",
-    }
-    -> package { 'amazon-ssm-agent':
+    } -> package { 'amazon-ssm-agent':
       ensure   => latest,
       provider => $pkg_provider,
       source   => "/tmp/amazon-ssm-agent.${pkg_format}",
     }
 
-
     case $srv_provider {
       'upstart': {
         $config_file = '/etc/init/amazon-ssm-agent.conf'
-        $proxy_line = "env http_proxy=http://${proxy_host}:${proxy_port}"
-        $match_expr = '^env http_proxy=.*$'
-        $no_proxy_line = 'env no_proxy=169.254.169.254'
       }
       'systemd': {
         $config_file = '/etc/systemd/system/amazon-ssm-agent.service'
-        $proxy_line = "Environment=\"HTTP_PROXY=http://${proxy_host}:${proxy_port}\""
-        $match_expr = '^Environment=\"HTTP_PROXY=.*$'
-        $no_proxy_line = 'Environment="no_proxy=169.254.169.254"'
       }
       default: {
         fail("Module does not support ${srv_provider} service provider")
       }
     }
 
-    if defined('$proxy_host') {
-      file_line { 'proxy':
-        ensure  => present,
-        path    => $config_file,
-        line    => $proxy_line,
-        match   => $match_expr,
-        replace => true,
-        require => Package['amazon-ssm-agent'],
+    $proxy_env_vars = [ 'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY' ]
+
+    if $proxy_url {
+      $proxy_env_vars.each |Integer $index, String $proxy_env_var| {
+        file_line { "proxy - ${proxy_env_var}":
+          ensure  => present,
+          path    => $config_file,
+          line    => amazon_ssm_agent::get_proxy_line($srv_provider, $proxy_env_var, $proxy_url),
+          match   => amazon_ssm_agent::get_proxy_match($srv_provider, $proxy_env_var),
+          replace => true,
+          require => Package['amazon-ssm-agent'],
+        }
       }
-      -> file_line {'no_proxy':
+      file_line { 'no_proxy':
         ensure => present,
         path   => $config_file,
-        line   => $no_proxy_line,
+        line   => amazon_ssm_agent::get_proxy_line($srv_provider, 'no_proxy', '169.254.169.254'),
       }
     }
     else {
-      file_line {'proxy':
-        ensure            => absent,
-        path              => $config_file,
-        match             => $match_expr,
-        match_for_absence => true,
-        require           => Package['amazon-ssm-agent']
+      $proxy_env_vars.each |Integer $index, String $proxy_env_var| {
+        file_line { "proxy - ${proxy_env_var}":
+          ensure            => absent,
+          path              => $config_file,
+          match             => amazon_ssm_agent::get_proxy_match($srv_provider, $proxy_env_var),
+          match_for_absence => true,
+          require           => Package['amazon-ssm-agent'],
+        }
       }
-      -> file_line {'no_proxy':
+      file_line { 'no_proxy':
         ensure => absent,
         path   => $config_file,
-        line   => $no_proxy_line,
+        line   => amazon_ssm_agent::get_proxy_line($srv_provider, 'no_proxy', '169.254.169.254'),
       }
     }
 
@@ -128,7 +152,7 @@ class amazon_ssm_agent (
       ensure    => running,
       enable    => true,
       provider  => $srv_provider,
-      subscribe => File_line['proxy']
+      subscribe => File_line['no_proxy']
     }
 
     file {"/tmp/amazon-ssm-agent.${pkg_format}":
