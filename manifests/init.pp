@@ -35,36 +35,6 @@
 #
 # Copyright 2017 Shine Solutions, unless otherwise noted.
 #
-function amazon_ssm_agent::get_proxy_line(String $srv_provider, String $key, String $value) {
-
-  case $srv_provider {
-    'upstart': {
-      "env ${key}=${value}"
-    }
-    'systemd': {
-      "Environment=\"${key}=${value}\""
-    }
-    default: {
-      fail("Module not supported on ${srv_provider} service")
-    }
-  }
-}
-
-function amazon_ssm_agent::get_proxy_match(String $srv_provider, String $key) {
-
-  case $srv_provider {
-    'upstart': {
-      "^env ${key}=.*$"
-    }
-    'systemd': {
-      "^Environment=\"${key}=.*$"
-    }
-    default: {
-      fail("Module not supported on ${srv_provider} service")
-    }
-  }
-}
-
 class amazon_ssm_agent (
   $region    = 'us-east-1',
   $proxy_url = undef,
@@ -100,51 +70,39 @@ class amazon_ssm_agent (
       source   => "/tmp/amazon-ssm-agent.${pkg_format}",
     }
 
+    $proxy_env_vars = [ 'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY' ]
+
     case $srv_provider {
       'upstart': {
         $config_file = '/etc/init/amazon-ssm-agent.conf'
+        fail("Module support for ${srv_provider} service provider has been temporarily disabled")
       }
       'systemd': {
         $config_file = '/etc/systemd/system/amazon-ssm-agent.service'
+        if $proxy_url {
+          $status = present
+        } else {
+          $status = absent
+        }
+        $proxy_env_vars.each |Integer $index, String $proxy_env_var| {
+          ini_setting { "Set proxy configuration ${proxy_env_var} ${status}":
+            ensure  => $status,
+            path    => $config_file,
+            section => 'Service',
+            setting => 'Environment',
+            value   => "${proxy_env_var}=${proxy_url}",
+          }
+        }
+        ini_setting { "Set no_proxy configuration ${status}":
+          ensure  => $status,
+          path    => $config_file,
+          section => 'Service',
+          setting => 'Environment',
+          value   => 'no_proxy=169.254.169.254',
+        }
       }
       default: {
         fail("Module does not support ${srv_provider} service provider")
-      }
-    }
-
-    $proxy_env_vars = [ 'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY' ]
-
-    if $proxy_url {
-      $proxy_env_vars.each |Integer $index, String $proxy_env_var| {
-        file_line { "proxy - ${proxy_env_var}":
-          ensure  => present,
-          path    => $config_file,
-          line    => amazon_ssm_agent::get_proxy_line($srv_provider, $proxy_env_var, $proxy_url),
-          match   => amazon_ssm_agent::get_proxy_match($srv_provider, $proxy_env_var),
-          replace => true,
-          require => Package['amazon-ssm-agent'],
-        }
-      }
-      file_line { 'no_proxy':
-        ensure => present,
-        path   => $config_file,
-        line   => amazon_ssm_agent::get_proxy_line($srv_provider, 'no_proxy', '169.254.169.254'),
-      }
-    }
-    else {
-      $proxy_env_vars.each |Integer $index, String $proxy_env_var| {
-        file_line { "proxy - ${proxy_env_var}":
-          ensure            => absent,
-          path              => $config_file,
-          match             => amazon_ssm_agent::get_proxy_match($srv_provider, $proxy_env_var),
-          match_for_absence => true,
-          require           => Package['amazon-ssm-agent'],
-        }
-      }
-      file_line { 'no_proxy':
-        ensure => absent,
-        path   => $config_file,
-        line   => amazon_ssm_agent::get_proxy_line($srv_provider, 'no_proxy', '169.254.169.254'),
       }
     }
 
