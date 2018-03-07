@@ -84,21 +84,27 @@ class amazon_ssm_agent (
         } else {
           $status = absent
         }
+        # Since puppetlabs/inifile module doesn't support repeat setting,
+        # we have to trick it into thinking that the setting includes the env var.
+        # Once puppetlabs/inifile supports repeat setting, it can be reverted back
+        # to 'Environment'
         $proxy_env_vars.each |Integer $index, String $proxy_env_var| {
-          ini_setting { "Set proxy configuration ${proxy_env_var} ${status}":
-            ensure  => $status,
-            path    => $config_file,
-            section => 'Service',
-            setting => 'Environment',
-            value   => "${proxy_env_var}=${proxy_url}",
+          ini_setting { "Set proxy configuration ${proxy_env_var} with status ${status}":
+            ensure            => $status,
+            path              => $config_file,
+            section           => 'Service',
+            setting           => "Environment=\"${proxy_env_var}",
+            value             => "${proxy_url}\"",
+            key_val_separator => '=',
           }
         }
-        ini_setting { "Set no_proxy configuration ${status}":
-          ensure  => $status,
-          path    => $config_file,
-          section => 'Service',
-          setting => 'Environment',
-          value   => 'no_proxy=169.254.169.254',
+        ini_setting { "Set no_proxy configuration with status ${status}":
+          ensure            => $status,
+          path              => $config_file,
+          section           => 'Service',
+          setting           => "Environment=\"no_proxy",
+          value             => "169.254.169.254\"",
+          key_val_separator => '=',
         }
       }
       default: {
