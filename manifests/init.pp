@@ -96,6 +96,7 @@ class amazon_ssm_agent (
             setting           => "Environment=\"${proxy_env_var}",
             value             => "${proxy_url}\"",
             key_val_separator => '=',
+            before            => Service['amazon-ssm-agent'],
           }
         }
         ini_setting { "Set no_proxy configuration with status ${status}":
@@ -105,6 +106,7 @@ class amazon_ssm_agent (
           setting           => "Environment=\"no_proxy",
           value             => "169.254.169.254\"",
           key_val_separator => '=',
+          before            => Service['amazon-ssm-agent'],
         }
       }
       default: {
@@ -116,7 +118,6 @@ class amazon_ssm_agent (
       ensure    => running,
       enable    => true,
       provider  => $srv_provider,
-      subscribe => File_line['no_proxy']
     }
 
     file {"/tmp/amazon-ssm-agent.${pkg_format}":
