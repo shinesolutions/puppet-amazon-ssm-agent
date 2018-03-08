@@ -1,12 +1,12 @@
 {
   "name": "shinesolutions-amazon_ssm_agent",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "author": "Shine Solutions (opensource@shinesolutions.com)",
   "summary": "Puppet module for managing Amazon System Manager Agent(ssm agent)",
   "license": "Apache-2.0",
   "source": "https://github.com/shinesolutions/puppet-amazon-ssm-agent.git",
   "project_page": "https://github.com/shinesolutions/puppet-amazon-ssm-agent",
-  "issues_url": null,
+  "issues_url": "https://github.com/shinesolutions/puppet-amazon-ssm-agent/issues",
   "dependencies": [
     {
       "name": "puppet/archive",
@@ -22,10 +22,6 @@
     {
     "operatingsystem":"RedHat",
     "operatingsystemrelease":[ "6.0", "7.0"]
-    },
-    {
-    "operatingsystem": "Ubuntu",
-    "operatingsystemrelease": [ "14.04", "16.04" ]
     },
     {
       "operatingsystem": "Amazon",
