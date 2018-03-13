@@ -115,9 +115,9 @@ class amazon_ssm_agent (
     }
 
     service { 'amazon-ssm-agent':
-      ensure    => running,
-      enable    => true,
-      provider  => $srv_provider,
+      ensure   => running,
+      enable   => true,
+      provider => $srv_provider,
     }
 
     file {"/tmp/amazon-ssm-agent.${pkg_format}":
