@@ -5,7 +5,7 @@ defaults:
   data_hash: yaml_data
 hierarchy:
   - name: "OS family and version"
-    path: "%{facts.os.family}/%{facts.os.family}-%{facts.os.release.major}.yaml"
+    path: "%{facts.os.family}/%{facts.os.name}-%{facts.os.release.major}.yaml"
   - name: "OS family"
     path: "%{facts.os.family}/%{facts.os.family}.yaml"
   - name: "common"
