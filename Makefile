@@ -1,26 +1,24 @@
-ci: tools clean deps lint
+ci: clean deps lint package
 
 deps:
 	gem install bundler
-	rm -rf .bundle
+	bundle config --local path vendor/bundle
 	bundle install --binstubs
 
 clean:
-	rm -rf pkg
-	rm -f Gemfile.lock
+	rm -rf bin/ pkg/ stage/ vendor/
 
 lint:
-	puppet-lint \
+	bundle exec puppet-lint \
 		--fail-on-warnings \
 		--no-140chars-check \
 		--no-autoloader_layout-check \
 		--no-documentation-check \
 		manifests/*.pp
+	bundle exec rubocop --config .rubocop.yml Gemfile
+	pdk validate metadata
 
 package:
-	puppet module build .
+	pdk build --force
 
-tools:
-	gem install puppet puppet-lint r10k
-
-.PHONY: ci clean deps lint package tools
+.PHONY: ci clean deps lint package
