@@ -1,3 +1,6 @@
+### 0.9.4
+*
+
 ### 0.9.3
 * Modify hierarchy to support Amazon Linux 2 config
 * Change Puppet Archive version dependency to >= 1.3.0 <3.2.0
