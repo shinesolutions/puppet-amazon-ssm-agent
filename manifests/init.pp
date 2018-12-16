@@ -33,7 +33,7 @@
 # Copyright
 # ---------
 #
-# Copyright 2017 Shine Solutions, unless otherwise noted.
+# Copyright 2017-2019 Shine Solutions, unless otherwise noted.
 #
 class amazon_ssm_agent (
   $region    = 'us-east-1',
