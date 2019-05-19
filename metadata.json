@@ -1,6 +1,6 @@
 {
   "name": "shinesolutions-amazon_ssm_agent",
-  "version": "0.9.4-pre.0",
+  "version": "0.9.4",
   "author": "Shine Solutions (opensource@shinesolutions.com)",
   "summary": "Puppet module for managing Amazon System Manager Agent(ssm agent)",
   "license": "Apache-2.0",
@@ -20,16 +20,24 @@
   "data_provider": "hiera",
   "operatingsystem_support": [
     {
-    "operatingsystem":"RedHat",
-    "operatingsystemrelease":[ "6.0", "7.0"]
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "6.0",
+        "7.0"
+      ]
     },
     {
       "operatingsystem": "Amazon",
-      "operatingsystemrelease": ["2016.03"]
+      "operatingsystemrelease": [
+        "2016.03"
+      ]
     }
   ],
   "requirements": [
-    { "name": "puppet", "version_requirement": ">= 5.0.0 < 7.0.0" }
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.0.0 < 7.0.0"
+    }
   ],
   "pdk-version": "1.7.0",
   "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
