@@ -1,12 +1,12 @@
 ci: clean deps lint package
 
-deps:
-	gem install bundler
-	bundle config --local path vendor/bundle
-	bundle install --binstubs
-
 clean:
 	rm -rf bin/ pkg/ stage/ vendor/
+
+deps:
+	gem install bundler --version=1.17.3
+	bundle config --local path vendor/bundle
+	bundle install --binstubs
 
 lint:
 	bundle exec puppet-lint \
