@@ -21,4 +21,7 @@ lint:
 package:
 	pdk build --force
 
-.PHONY: ci clean deps lint package
+release:
+	rtk release
+
+.PHONY: ci clean deps lint package release
