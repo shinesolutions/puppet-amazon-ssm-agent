@@ -16,10 +16,10 @@ lint:
 		--no-documentation-check \
 		manifests/*.pp
 	bundle exec rubocop --config .rubocop.yml Gemfile
-	pdk validate metadata
+	PDK_DISABLE_ANALYTICS=true pdk validate metadata
 
 package:
-	pdk build --force
+	PDK_DISABLE_ANALYTICS=true pdk build --force
 
 release:
 	rtk release
