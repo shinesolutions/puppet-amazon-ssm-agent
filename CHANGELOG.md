@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add example for proxy manifest
+
+### Removed
+- Removed systemd reload as it may interferes with other modules
+
 ## 0.10.0 - 2019-08-20
 ### Changed
 - Seperated package installation & proxy configuration [#6]
