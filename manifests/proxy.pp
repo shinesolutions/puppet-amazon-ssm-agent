@@ -65,7 +65,6 @@ class amazon_ssm_agent::proxy (
             value             => "${proxy_url}\"",
             key_val_separator => '=',
             before            => Service['amazon-ssm-agent'],
-            notify            => Exec['/usr/bin/systemctl daemon-reload'],
           }
         }
         ini_setting { "Set no_proxy configuration with status ${status}":
@@ -76,11 +75,6 @@ class amazon_ssm_agent::proxy (
           value             => "169.254.169.254\"",
           key_val_separator => '=',
           before            => Service['amazon-ssm-agent'],
-          notify            => Exec['/usr/bin/systemctl daemon-reload'],
-        }
-
-        exec { '/usr/bin/systemctl daemon-reload':
-          refreshonly => true,
         }
       }
       default: {
