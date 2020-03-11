@@ -53,6 +53,9 @@ class amazon_ssm_agent (
       'i386': {
         $architecture = '386'
       }
+      'aarch64','arm64': {
+        $architecture = 'arm64'
+      }
       default: {
         fail("Module not supported on ${facts['os']['architecture']} architecture")
       }
