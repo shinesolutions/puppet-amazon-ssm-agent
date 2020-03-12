@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add support for Amazon Linux 2 arm instances
+
+### Fixed
+- Fix service provider name for CentOS7
+
 ## 0.11.0 - 2019-08-21
 ### Added
 - Add example for proxy manifest
