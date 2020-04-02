@@ -77,6 +77,7 @@ class amazon_ssm_agent::proxy (
           before            => Service['amazon-ssm-agent'],
         }
       }
+      'none': {}
       default: {
         fail("Module does not support ${srv_provider} service provider")
       }
