@@ -44,7 +44,8 @@ class amazon_ssm_agent (
     $pkg_format   = lookup('amazon_ssm_agent::pkg_format', String, 'first')
     $flavor       = lookup('amazon_ssm_agent::flavor', String, 'first')
 
-    $srv_provider = lookup('amazon_ssm_agent::srv_provider', String, 'first')
+    # hardcoded to avoid error with failing to use upstart
+    $srv_provider = 'systemd'
 
     case $facts['os']['architecture'] {
       'x86_64','amd64': {

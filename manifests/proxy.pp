@@ -36,7 +36,8 @@
 #
 class amazon_ssm_agent::proxy (
   $proxy_url    = undef,
-  $srv_provider = lookup('amazon_ssm_agent::srv_provider', String, 'first'),
+  # hardcoded to avoid error with failing to use upstart
+  $srv_provider = 'systemd',
   ) {
     $proxy_env_vars = [ 'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY' ]
 
