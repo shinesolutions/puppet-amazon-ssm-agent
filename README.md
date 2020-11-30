@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/shinesolutions/puppet-amazon-ssm-agent.svg)](http://travis-ci.org/shinesolutions/puppet-amazon-ssm-agent)
+[![Build Status](https://github.com/shinesolutions/puppet-amazon-ssm-agent/workflows/CI/badge.svg)](https://github.com/shinesolutions/puppet-amazon-ssm-agent/actions?workflow=CI)
 [![Published Version](https://img.shields.io/puppetforge/v/shinesolutions/amazon_ssm_agent.svg)](http://forge.puppet.com/shinesolutions/amazon_ssm_agent)
 [![Downloads Count](https://img.shields.io/puppetforge/dt/shinesolutions/amazon_ssm_agent.svg)](http://forge.puppet.com/shinesolutions/amazon_ssm_agent)
 [![Known Vulnerabilities](https://snyk.io/test/github/shinesolutions/puppet-amazon-ssm-agent/badge.svg)](https://snyk.io/test/github/shinesolutions/puppet-amazon-ssm-agent)
