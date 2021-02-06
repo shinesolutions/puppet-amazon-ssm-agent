@@ -16,6 +16,16 @@
 # The proxy URL in <protocol>://<host>:<port> format, specify if the ssm agent needs to communicate via a proxy
 # Default value: undef
 #
+# * `service_enable`
+# Data Type: Boolean
+# Ensure state of the service. Can be 'running', 'stopped', true, or false
+# Default value: 'running'
+#
+# * `service_ensure`
+# Data Type: String, Boolean
+# Whether to enable the service.
+# Default value: true
+#
 #
 # Examples
 # --------
@@ -36,8 +46,10 @@
 # Copyright 2017-2019 Shine Solutions, unless otherwise noted.
 #
 class amazon_ssm_agent (
-  $region    = 'us-east-1',
-  $proxy_url = undef,
+  String $region              = 'us-east-1',
+  Optional[String] $proxy_url = undef,
+  Boolean $service_enable     = true,
+  $service_ensure             = 'running',
   ) {
 
     $pkg_provider = lookup('amazon_ssm_agent::pkg_provider', String, 'first')
@@ -73,17 +85,20 @@ class amazon_ssm_agent (
       source   => "/tmp/amazon-ssm-agent.${pkg_format}",
     }
 
-    class { '::amazon_ssm_agent::proxy':
-      proxy_url    => $proxy_url,
-      srv_provider => $srv_provider,
-      require      => Package['amazon-ssm-agent'],
-      before       => Service['amazon-ssm-agent'],
-    }
+    if $service_ensure {
+      class { '::amazon_ssm_agent::proxy':
+        proxy_url    => $proxy_url,
+        srv_provider => $srv_provider,
+        require      => Package['amazon-ssm-agent'],
+      }
 
-    service { 'amazon-ssm-agent':
-      ensure   => running,
-      enable   => true,
-      provider => $srv_provider,
+      service { 'amazon-ssm-agent':
+        ensure   => $service_ensure,
+        enable   => $service_enable,
+        provider => $srv_provider,
+      }
+
+      Class['::amazon_ssm_agent::proxy'] -> Service['amazon-ssm-agent']
     }
 
     file {"/tmp/amazon-ssm-agent.${pkg_format}":
