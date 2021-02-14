@@ -3,58 +3,48 @@
 [![Downloads Count](https://img.shields.io/puppetforge/dt/shinesolutions/amazon_ssm_agent.svg)](http://forge.puppet.com/shinesolutions/amazon_ssm_agent)
 [![Known Vulnerabilities](https://snyk.io/test/github/shinesolutions/puppet-amazon-ssm-agent/badge.svg)](https://snyk.io/test/github/shinesolutions/puppet-amazon-ssm-agent)
 
-# Puppet Amazon SSM Agent
+Puppet AEM Resources
+--------------------
 
-#### Table of Contents
+A Puppet module for provisioning [AWS Systems Manager](https://aws.amazon.com/systems-manager/) agent.
 
-1. [Description](#description)
-1. [Setup - The basics of getting started with amazon_ssm_agent](#setup)
-    * [Beginning with amazon_ssm_agent](#beginning-with-amazon_ssm_agent)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+Learn more about Puppet AEM Resources:
 
-## Description
+* [Installation](https://github.com/shinesolutions/puppet-amazon-ssm-agent#installation)
+* [Usage](https://github.com/shinesolutions/puppet-amazon-ssm-agent#usage)
+* [Upgrade](https://github.com/shinesolutions/puppet-amazon-ssm-agent#upgrade)
+* [Testing](https://github.com/shinesolutions/puppet-amazon-ssm-agent#testing)
 
-Download and install Amazon System Management Agent, i.e., amazon-ssm-agent package.
+Installation
+------------
 
-## Setup
+    puppet module install shinesolutions-amazon_ssm_agent
 
-### Beginning with amazaon_ssm_agent -- Installation
-put the following line in your Puppetfile
-```
-mod 'shinesolutions/amazon_ssm_agent', :git => 'https://github.com/shinesolutions/amazon_ssm_agent.git'
-```
+Or via a Puppetfile:
 
-## Usage
-For the simplest scenario, the following will download and install the latest package:
-```
-include amazon_ssm_agent
-```
-or specifying an AWS Region that is closest to you:
+    mod 'shinesolutions/amazon_ssm_agent'
 
-```
-class {'amazon_ssm_agent':
-  region => 'ap-southeast-2',
-}
-```
+If you want to use the master version:
 
-When the ssm agent has to communicate with Amazon EC2 System Manager Service via a proxy.
-```
-class {'amazon_ssm_agent':
-  region     => 'ap-southeast-2',
-  proxy_host => 'proxy.shinesolutions.com',
-  proxy_port => '443'
-}
-```
+    mod 'shinesolutions/amazon_ssm_agent', :git => 'https://github.com/shinesolutions/amazon_ssm_agent'
 
-## Reference
-### Public classes
-amazon_ssm_agent
+Usage
+-----
 
+Provision SSM agent with default region `us-east-1`:
 
-## Limitations
+    include amazon_ssm_agent
 
-The module is still under active development and test. Currently there are no plan to support
-platforms other than Amazon Linux, RedHat, CentOS, and Ubuntu.
+Provision SSM agent with a custom region:
+
+    class {'amazon_ssm_agent':
+      region => 'ap-southeast-2',
+    }
+
+Provision SSM agent with proxy configuration:
+
+    class {'amazon_ssm_agent':
+      region     => 'ap-southeast-2',
+      proxy_host => 'some.proxy.com',
+      proxy_port => '3128'
+    }
