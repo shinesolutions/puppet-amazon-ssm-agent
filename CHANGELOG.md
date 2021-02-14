@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
+### Added
 - Add Puppet 7 to version requirement
+
+### Changed
+- Make service_ensure and service_enable configurable
 
 ## 0.12.0 - 2020-03-12
 ### Added
