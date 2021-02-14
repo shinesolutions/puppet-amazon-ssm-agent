@@ -1,3 +1,12 @@
+# Start of The Works gitignore
+bin/
+logs/
+modules/
+stage/
+zzz-*.*
+local*
+# End of The Works gitignore
+
 # Created by https://www.toptal.com/developers/gitignore/api/puppet,macos,vscode,ruby
 # Edit at https://www.toptal.com/developers/gitignore?templates=puppet,macos,vscode,ruby
 
