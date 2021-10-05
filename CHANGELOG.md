@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add publish and release-* GitHub Actions
+
 ## 1.0.0 - 2021-02-14
 ### Added
 - Add Puppet 7 to version requirement
