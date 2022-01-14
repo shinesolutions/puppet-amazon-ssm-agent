@@ -17,13 +17,18 @@
       "version_requirement": "2.2.0"
     }
   ],
-  "data_provider": "hiera",
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "6.0",
         "7.0"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "18.04"
       ]
     },
     {

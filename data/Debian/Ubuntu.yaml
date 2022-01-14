@@ -1,0 +1,8 @@
+---
+
+amazon_ssm_agent::pkg_provider: dpkg
+amazon_ssm_agent::pkg_format: deb
+amazon_ssm_agent::flavor: debian
+
+amazon_ssm_agent::srv_provider: systemd
+
