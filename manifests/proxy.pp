@@ -72,7 +72,7 @@ class amazon_ssm_agent::proxy (
           path              => $config_file,
           section           => 'Service',
           setting           => "Environment=\"no_proxy",
-          value             => "169.254.169.254\"",
+          value             => "169.254.169.254,127.0.0.1,localhost\"",
           key_val_separator => '=',
           before            => Service['amazon-ssm-agent'],
         }
