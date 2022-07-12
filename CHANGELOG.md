@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- Updated default vales for no-proxy configuration
+- Add 127.0.0.1 and localhost to default vales for no-proxy configuration
 
 ## 1.0.1 - 2021-10-05
 ### Added
