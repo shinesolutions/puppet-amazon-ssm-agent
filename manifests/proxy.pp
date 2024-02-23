@@ -41,10 +41,6 @@ class amazon_ssm_agent::proxy (
     $proxy_env_vars = [ 'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY' ]
 
     case $srv_provider {
-      'upstart': {
-        $config_file = '/etc/init/amazon-ssm-agent.conf'
-        fail("Module support for ${srv_provider} service provider has been temporarily disabled")
-      }
       'systemd': {
         $config_file = '/etc/systemd/system/amazon-ssm-agent.service'
         if $proxy_url {
