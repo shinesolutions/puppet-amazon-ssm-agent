@@ -1,0 +1,3 @@
+---
+# An empty hash rather than an empty file, which rake check:utf8 fails to read
+{}
