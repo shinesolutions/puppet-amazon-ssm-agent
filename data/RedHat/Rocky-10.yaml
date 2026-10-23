@@ -1,0 +1,5 @@
+---
+
+# Without this, RedHat/RedHat.yaml sets upstart, which
+# amazon_ssm_agent::proxy fails on
+amazon_ssm_agent::srv_provider: systemd
