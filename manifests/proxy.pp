@@ -40,6 +40,8 @@ class amazon_ssm_agent::proxy (
       # Editing this unit only works while the S3 package that installs it is installed: the Amazon Linux 2023
       # package's unit is in /usr/lib/systemd/system, so a file created here would replace it with only these lines.
       # TODO: the settings don't notify the service, so a changed proxy only applies after the next restart.
+      # TODO: inifile reads these lines' key as 'Environment', so it never finds the settings below: every run
+      # appends them again, and removing proxy_url doesn't remove them.
       $config_file = '/etc/systemd/system/amazon-ssm-agent.service'
       if $proxy_url {
         $status = present

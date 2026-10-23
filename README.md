@@ -79,7 +79,7 @@ With the default parameters, applying `amazon_ssm_agent` results in:
 | Package | `amazon-ssm-agent`, upgraded at each run to the latest package from `https://amazon-ssm-<region>.s3.amazonaws.com/latest/linux_<amd64\|arm64>/amazon-ssm-agent.rpm`, installed with `rpm` |
 | Download | `/tmp/amazon-ssm-agent.rpm`, removed again once the package is installed |
 | systemd unit | `/etc/systemd/system/amazon-ssm-agent.service`, installed by the package. Its `[Service]` section has the proxy settings below when `proxy_url` is set |
-| Proxy settings | `Environment=` lines for `http_proxy`, `https_proxy`, `HTTP_PROXY` and `HTTPS_PROXY` set to `proxy_url`, and `no_proxy` set to `169.254.169.254,127.0.0.1,localhost`. Removed when `proxy_url` isn't set |
+| Proxy settings | `Environment=` lines for `http_proxy`, `https_proxy`, `HTTP_PROXY` and `HTTPS_PROXY` set to `proxy_url`, and `no_proxy` set to `169.254.169.254,127.0.0.1,localhost` (see [Known Issues](#known-issues)) |
 | Service | `amazon-ssm-agent`, running and enabled at boot |
 
 ## Error Handling
@@ -114,6 +114,12 @@ Found while upgrading to OpenVox 9 on Amazon Linux 2023:
   lines, which replaces the Amazon Linux package's unit. AWS documents a
   systemd drop-in in `/etc/systemd/system/amazon-ssm-agent.service.d/` instead
   (TODO in `manifests/proxy.pp`).
+* **The proxy settings are added again on every run and never removed.**
+  `puppetlabs/inifile` reads the key of a line like
+  `Environment="http_proxy=..."` as `Environment`, so it never finds the
+  module's settings: every run with `proxy_url` appends the five `Environment=`
+  lines again, and removing `proxy_url` leaves them in place. This happens with
+  both the old inifile 2.2.0 and 6.5.0 (TODO in `manifests/proxy.pp`).
 * **A changed proxy needs a service restart.** The proxy settings are applied
   before the service, but don't notify it.
 * **Every run reports changes.** The package is downloaded to `/tmp` and removed
