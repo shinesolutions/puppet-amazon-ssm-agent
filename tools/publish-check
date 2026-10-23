@@ -33,10 +33,11 @@ else
   ok "version ${version} is a release version"
 fi
 
-if grep -q "^## \[${version}\]" CHANGELOG.md 2>/dev/null; then
-  ok "CHANGELOG.md has a [${version}] section"
+# This CHANGELOG's release headings are "## <version> - <date>", without brackets
+if grep -q "^## ${version} " CHANGELOG.md 2>/dev/null; then
+  ok "CHANGELOG.md has a ${version} section"
 else
-  fail "CHANGELOG.md has no [${version}] section; move the Unreleased entries to it"
+  fail "CHANGELOG.md has no ${version} section; move the Unreleased entries to it"
 fi
 
 status=$(curl -s -o /dev/null -w '%{http_code}' "${FORGE_API}/v3/releases/${name}-${version}")

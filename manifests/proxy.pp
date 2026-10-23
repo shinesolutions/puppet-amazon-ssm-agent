@@ -36,6 +36,10 @@ class amazon_ssm_agent::proxy (
       fail("Module support for ${srv_provider} service provider has been temporarily disabled")
     }
     'systemd': {
+      # TODO: set the proxy in a systemd drop-in (amazon-ssm-agent.service.d/*.conf), as AWS documents.
+      # Editing this unit only works while the S3 package that installs it is installed: the Amazon Linux 2023
+      # package's unit is in /usr/lib/systemd/system, so a file created here would replace it with only these lines.
+      # TODO: the settings don't notify the service, so a changed proxy only applies after the next restart.
       $config_file = '/etc/systemd/system/amazon-ssm-agent.service'
       if $proxy_url {
         $status = present
