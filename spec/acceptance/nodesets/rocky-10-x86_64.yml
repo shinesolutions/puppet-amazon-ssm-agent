@@ -7,12 +7,13 @@ HOSTS:
     image: rockylinux/rockylinux:10
     hypervisor: docker
     # Keep the built image so these layers are cached between runs. The agent is
-    # baked in, so the agent install in spec_helper_acceptance.rb is a no-op.
+    # baked in, so beaker doesn't install it (BEAKER_PUPPET_COLLECTION is
+    # preinstalled in the Makefile).
     docker_preserve_image: true
     docker_image_commands:
       # The release package URL can't be wrapped
       # yamllint disable-line rule:line-length
-      - dnf install -y https://ftp.gwdg.de/pub/linux/openvox/yum/openvox9-release-amazon-2023.noarch.rpm
+      - dnf install -y https://ftp.gwdg.de/pub/linux/openvox/yum/openvox9-release-el-10.noarch.rpm
       # The release package's repo file points at yum.voxpupuli.org, which
       # is down, so switch its baseurl to the mirror (the GPG key is in the
       # release package)
