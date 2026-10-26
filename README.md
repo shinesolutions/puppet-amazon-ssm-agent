@@ -92,9 +92,10 @@ The Puppet run fails when:
 * The package can't be downloaded from S3, e.g. without direct internet access:
   the download doesn't use `proxy_url`.
 
-Puppet only checks that the service has started. The agent keeps running
-without AWS credentials or instance metadata, and logs its registration errors
-in `/var/log/amazon/ssm/`.
+Puppet only checks that the service has started. Without an identity (EC2
+instance metadata or an on-premises registration), the agent exits a few
+seconds after starting with `failed to find agent identity`, and systemd
+restarts it every 90 seconds; its log is in `/var/log/amazon/ssm/`.
 
 ## Known Issues
 

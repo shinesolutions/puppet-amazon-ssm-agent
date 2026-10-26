@@ -42,9 +42,10 @@ describe 'amazon_ssm_agent class' do
       it { is_expected.not_to exist }
     end
 
+    # Not checked for running: off EC2 the agent finds no identity, exits after a
+    # few seconds and is restarted by systemd 90 seconds later
     describe service('amazon-ssm-agent') do
       it { is_expected.to be_enabled }
-      it { is_expected.to be_running }
     end
 
     describe file('/etc/systemd/system/amazon-ssm-agent.service') do
@@ -62,10 +63,6 @@ describe 'amazon_ssm_agent class' do
         its(:content) { is_expected.to match(%r{^Environment="#{proxy_env_var}=http://someproxy:3128"$}) }
       end
       its(:content) { is_expected.to match(%r{^Environment="no_proxy=169.254.169.254,127.0.0.1,localhost"$}) }
-    end
-
-    describe service('amazon-ssm-agent') do
-      it { is_expected.to be_running }
     end
   end
 
