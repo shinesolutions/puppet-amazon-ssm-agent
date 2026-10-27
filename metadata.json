@@ -10,36 +10,31 @@
   "dependencies": [
     {
       "name": "puppet/archive",
-      "version_requirement": "3.1.1"
+      "version_requirement": ">= 6.0.0 < 10.0.0"
     },
     {
-      "name": "puppetlabs-inifile",
-      "version_requirement": "2.2.0"
+      "name": "puppetlabs/inifile",
+      "version_requirement": ">= 6.0.0 < 7.0.0"
     }
   ],
-  "data_provider": "hiera",
   "operatingsystem_support": [
     {
-      "operatingsystem": "RedHat",
+      "operatingsystem": "Rocky",
       "operatingsystemrelease": [
-        "6.0",
-        "7.0"
+        "10"
       ]
     },
     {
       "operatingsystem": "Amazon",
       "operatingsystemrelease": [
-        "2016.03"
+        "2023"
       ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 5.0.0 < 8.0.0"
+      "version_requirement": ">= 7.0.0 < 10.0.0"
     }
-  ],
-  "pdk-version": "1.7.0",
-  "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
-  "template-ref": "1.7.0-0-g57412ed"
+  ]
 }

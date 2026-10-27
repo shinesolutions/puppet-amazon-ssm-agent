@@ -9,6 +9,7 @@
 # Learn more about module testing here:
 # https://docs.puppet.com/guides/tests_smoke.html
 #
-class { '::amazon_ssm_agent::proxy':
-  proxy_url => http://localhost:3128,
+class { 'amazon_ssm_agent::proxy':
+  # Quoted: the unquoted URL was a syntax error
+  proxy_url => 'http://localhost:3128',
 }

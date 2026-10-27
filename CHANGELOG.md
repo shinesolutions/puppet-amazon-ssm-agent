@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Added Amazon Linux 2023 and Rocky Linux 10 support, with systemd Hiera data for both
+- Added unit and acceptance tests (Amazon Linux 2023 and Rocky Linux 10 nodesets) to GitHub CI
+- Added Makefile targets for unit tests, acceptance tests, docs and publish checks
+- Documented the known issues found on Amazon Linux 2023 in README.md
+
+### Changed
+- Upgraded to Ruby 4.0.7 and OpenVox 9 with Vox Pupuli tooling, replacing PDK
+- Limited OS support to Amazon Linux 2023 and Rocky Linux 10, and the Puppet requirement to >= 7.0.0 < 10.0.0
+- Changed the puppet/archive and puppetlabs/inifile dependencies to ranges, >= 6.0.0 < 10.0.0 and >= 6.0.0 < 7.0.0
+- Simplify CI, publish and release workflows to not use action files anymore, running in aem-platform-buildenv 6.4.1
+- Changed the parameter docs to puppet-strings tags
+
+### Fixed
+- Fixed the swapped service_enable and service_ensure parameter descriptions
+- Fixed the syntax error in examples/proxy.pp
+- Fixed README usage, which documented proxy_host and proxy_port parameters that don't exist
 
 ## 1.1.0 - 2022-07-12
 ### Changed

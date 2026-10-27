@@ -1,15 +1,27 @@
-name: Publish
+---
+name: Publish Puppet Module
 'on':
   push:
     tags:
       - '*'
+permissions:
+  contents: read
+  id-token: write
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v7
         with:
-          ref: main
-      - uses: ./.github/actions/publish-action
+          set-safe-directory: ${{ github.workspace }}
+      - uses: cliffano/command-docker-action@v2.1.0
+        with:
+          image: shinesolutions/aem-platform-buildenv:6.4.1
+          shell: bash
+          extra_args: -e BLACKSMITH_FORGE_API_KEY
+          command: |
+            make clean deps package publish
         env:
-          PUPPETFORGE_TOKEN: '${{ secrets.SHINEOPENSOURCE_PUPPETFORGE_TOKEN }}'
+          # The secret name makes this line longer than yamllint's 80 characters
+          # yamllint disable-line rule:line-length
+          BLACKSMITH_FORGE_API_KEY: ${{ secrets.SHINEOPENSOURCE_PUPPETFORGE_TOKEN }}

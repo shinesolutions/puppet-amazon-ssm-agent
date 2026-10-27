@@ -46,12 +46,14 @@ Temporary Items
 # Built packages
 pkg/*
 
-# Should run on multiple platforms so don't check in
-Gemfile.lock
+# Gemfile.lock is committed so CI and the buildenv use the same gem versions
 
 # Tests
 spec/fixtures/*
 coverage/*
+# Written by the rspec/beaker runs (voxpupuli-test)
+/junit/
+/log/
 
 # Third-party
 vendor/*

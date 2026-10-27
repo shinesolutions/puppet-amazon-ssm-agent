@@ -1,0 +1,7 @@
+---
+fixtures:
+  forge_modules:
+    archive: "puppet/archive"
+    inifile: "puppetlabs/inifile"
+    # stdlib is a dependency of archive and inifile
+    stdlib: "puppetlabs/stdlib"

@@ -1,0 +1,7 @@
+--fail-on-warnings
+--no-140chars-check
+--no-autoloader_layout-check
+--no-documentation-check
+# Disabled because adding data types to the untyped parameters would change the values they accept
+--no-parameter_types-check
+--ignore-paths=spec/**/*.pp,pkg/**/*.pp
