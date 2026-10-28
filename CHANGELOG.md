@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the puppet/archive and puppetlabs/inifile dependencies to ranges, >= 6.0.0 < 10.0.0 and >= 6.0.0 < 7.0.0
 - Simplify CI, publish and release workflows to not use action files anymore, running in aem-platform-buildenv 6.4.1
 - Changed the parameter docs to puppet-strings tags
+- Fall back to the GWDG mirror of yum.voxpupuli.org for the OpenVox 9 release package and repo in the acceptance nodesets, so an outage of yum.voxpupuli.org does not block CI
 
 ### Fixed
 - Fixed the swapped service_enable and service_ensure parameter descriptions
