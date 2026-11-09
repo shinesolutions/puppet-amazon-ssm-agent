@@ -1,4 +1,5 @@
 [![Build Status](https://github.com/shinesolutions/puppet-amazon-ssm-agent/workflows/CI/badge.svg)](https://github.com/shinesolutions/puppet-amazon-ssm-agent/actions?query=workflow%3ACI)
+[![Code Scanning Status](https://github.com/shinesolutions/puppet-amazon-ssm-agent/workflows/CodeQL/badge.svg)](https://github.com/shinesolutions/puppet-amazon-ssm-agent/actions?query=workflow%3ACodeQL)
 [![Published Version](https://img.shields.io/puppetforge/v/shinesolutions/amazon_ssm_agent.svg)](http://forge.puppet.com/shinesolutions/amazon_ssm_agent)
 [![Downloads Count](https://img.shields.io/puppetforge/dt/shinesolutions/amazon_ssm_agent.svg)](http://forge.puppet.com/shinesolutions/amazon_ssm_agent)
 
