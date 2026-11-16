@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented the known issues found on Amazon Linux 2023 in README.md
 
 ### Changed
+- Speed up CI: skip CI for release tags, same-repo pull requests and version bump commits, cancel superseded branch runs, and add job timeouts
+- Make the GitHub Actions workflows' GITHUB_TOKEN read-only
 - Upgraded to Ruby 4.0.7 and OpenVox 9 with Vox Pupuli tooling, replacing PDK
 - Limited OS support to Amazon Linux 2023 and Rocky Linux 10, and the Puppet requirement to >= 7.0.0 < 10.0.0
 - Changed the puppet/archive and puppetlabs/inifile dependencies to ranges, >= 6.0.0 < 10.0.0 and >= 6.0.0 < 7.0.0
