@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded release-action to 2.2.0
 
 ### Fixed
+- Fix CI for Dependabot pull requests, which get no Actions secrets: check out with the workflow's read-only GITHUB_TOKEN instead of a secret token
 - Fixed the swapped service_enable and service_ensure parameter descriptions
 - Fixed the syntax error in examples/proxy.pp
 - Fixed README usage, which documented proxy_host and proxy_port parameters that don't exist
