@@ -2,7 +2,9 @@
 name: Dependabot Changelog
 'on':
   pull_request:
-    types: [opened, synchronize, reopened]
+    # synchronize: Dependabot's rebases and version changes force-push the
+    # branch, which drops the changelog commit, so add the entry again
+    types: [opened, synchronize]
 # Dependabot runs get a read-only GITHUB_TOKEN unless write access is granted
 # here; it is needed to commit the changelog entry to the Dependabot branch
 permissions:
