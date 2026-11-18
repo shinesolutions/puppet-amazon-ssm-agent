@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add .github/dependabot.yml to group Dependabot security updates into one pull request per ecosystem, with routine version updates off
+- Add .github/dependabot.yml: Ruby gem security updates grouped into one pull request, and GitHub Actions security updates grouped plus weekly grouped version updates with a 7 day cooldown, all with a `deps` commit prefix and `dependencies` label
+- Add a Dependency Review workflow that fails a pull request adding a dependency with a known vulnerability
 - Add a workflow that adds each Dependabot pull request's dependency update to CHANGELOG.md, committed with the workflow's GITHUB_TOKEN
 - Added Amazon Linux 2023 and Rocky Linux 10 support, with systemd Hiera data for both
 - Added unit and acceptance tests (Amazon Linux 2023 and Rocky Linux 10 nodesets) to GitHub CI

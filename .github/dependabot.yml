@@ -1,15 +1,21 @@
 ---
-# Dependabot security updates only, grouped into one pull request per
-# ecosystem instead of one per vulnerable dependency.
-# open-pull-requests-limit: 0 turns off routine version updates; it does not
-# affect security updates, which Dependabot raises when a new alert is found.
+# Ruby gems: security updates only, grouped into one pull request.
+# GitHub Actions: security updates grouped, plus weekly grouped version
+# updates (minor and patch together, majors separately), each held back
+# until the release is 7 days old.
 version: 2
 updates:
   - package-ecosystem: bundler
     directory: /
     schedule:
       interval: daily
+    # Turns off routine version updates; security updates are not affected
+    # and are raised when a new alert is found
     open-pull-requests-limit: 0
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
     groups:
       bundler-security-updates:
         applies-to: security-updates
@@ -17,9 +23,24 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
-    open-pull-requests-limit: 0
+      interval: weekly
+    # Wait 7 days after a release before proposing it, so a compromised
+    # release is likely to be caught and pulled first
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
     groups:
       github-actions-security-updates:
         applies-to: security-updates
         patterns: ['*']
+      github-actions-minor-and-patch:
+        applies-to: version-updates
+        patterns: ['*']
+        update-types: [minor, patch]
+      github-actions-major:
+        applies-to: version-updates
+        patterns: ['*']
+        update-types: [major]
