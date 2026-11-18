@@ -1,0 +1,96 @@
+---
+name: Dependabot Changelog
+'on':
+  pull_request:
+    types: [opened, synchronize, reopened]
+# Dependabot runs get a read-only GITHUB_TOKEN unless write access is granted
+# here; it is needed to commit the changelog entry to the Dependabot branch
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  changelog:
+    # Only for pushes by Dependabot itself, so a maintainer's own commits to
+    # the branch are left alone
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    timeout-minutes: 10
+    runs-on: ubuntu-26.04
+    steps:
+      - id: metadata
+        uses: dependabot/fetch-metadata@v3
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Add the dependency update to CHANGELOG.md
+        env:
+          UPDATED_DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, pathlib, re, sys
+
+          deps = json.loads(os.environ.get("UPDATED_DEPENDENCIES") or "[]")
+          changelog = pathlib.Path("CHANGELOG.md")
+          if not deps or not changelog.exists():
+              sys.exit(0)
+          text = changelog.read_text()
+
+          # The Unreleased heading, as "## Unreleased", "## [Unreleased]" or
+          # "### Unreleased"; its subsections are one level deeper
+          heading = re.search(r"^(#{2,3}) \[?Unreleased\]?[ \t]*$", text, re.M | re.I)
+          if not heading:
+              print("No Unreleased section in CHANGELOG.md, nothing to update")
+              sys.exit(0)
+          level = len(heading.group(1))
+          next_heading = re.compile(r"^#{1,%d} " % level, re.M).search(text, heading.end())
+          end = next_heading.start() if next_heading else len(text)
+          section = text[heading.end():end]
+          bullet = "*" if re.search(r"^\* ", text, re.M) and not re.search(r"^- ", text, re.M) else "-"
+
+          new_entries = []
+          for dep in deps:
+              entry = "%s Bump %s from %s to %s (#%s)" % (
+                  bullet, dep["dependencyName"], dep.get("prevVersion") or "?",
+                  dep.get("newVersion") or "?", os.environ["PR_NUMBER"])
+              # Replace an earlier entry for the same dependency, e.g. after
+              # Dependabot updates the pull request to a newer version
+              existing = re.compile(r"^[-*] Bump %s from .*$" % re.escape(dep["dependencyName"]), re.M)
+              if existing.search(section):
+                  section = existing.sub(lambda _: entry, section, count=1)
+              else:
+                  new_entries.append(entry)
+
+          if new_entries:
+              subheading = "#" * (level + 1)
+              lines = "\n".join(new_entries)
+              body = section.lstrip("\n")
+              changed = re.search(r"^%s Changed[ \t]*$" % subheading, section, re.M)
+              # Follow the changelog's style: "Changed" subsections, or entries
+              # listed directly under the version heading
+              uses_subsections = re.search(r"^%s " % subheading, section if body.strip() else text, re.M)
+              if changed:
+                  section = section[:changed.end()] + "\n" + lines + section[changed.end():]
+              elif uses_subsections:
+                  section = "\n%s Changed\n%s\n\n%s" % (subheading, lines, body)
+              else:
+                  section = "\n%s\n%s" % (lines, body)
+              if next_heading:
+                  section = section.rstrip("\n") + "\n\n"
+
+          changelog.write_text(text[:heading.end()] + section + text[end:])
+          EOF
+      - name: Commit and push the changelog entry
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "CHANGELOG.md is already up to date"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add CHANGELOG.md
+          git commit -m 'Add the Dependabot update to CHANGELOG.md'
+          git push origin "HEAD:${HEAD_REF}"

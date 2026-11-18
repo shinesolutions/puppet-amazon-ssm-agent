@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Add a workflow that adds each Dependabot pull request's dependency update to CHANGELOG.md, committed with the workflow's GITHUB_TOKEN
 - Added Amazon Linux 2023 and Rocky Linux 10 support, with systemd Hiera data for both
 - Added unit and acceptance tests (Amazon Linux 2023 and Rocky Linux 10 nodesets) to GitHub CI
 - Added Makefile targets for unit tests, acceptance tests, docs and publish checks
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded release-action to 2.2.0
 
 ### Fixed
+- Fix CI for Dependabot pull requests, which get no Actions secrets: check out with the workflow's read-only GITHUB_TOKEN instead of a secret token
 - Fixed the swapped service_enable and service_ensure parameter descriptions
 - Fixed the syntax error in examples/proxy.pp
 - Fixed README usage, which documented proxy_host and proxy_port parameters that don't exist
