@@ -27,6 +27,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Add the dependency update to CHANGELOG.md
         env:
+          # yamllint disable-line rule:line-length
           UPDATED_DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
@@ -41,15 +42,19 @@ jobs:
 
           # The Unreleased heading, as "## Unreleased", "## [Unreleased]" or
           # "### Unreleased"; its subsections are one level deeper
-          heading = re.search(r"^(#{2,3}) \[?Unreleased\]?[ \t]*$", text, re.M | re.I)
+          heading = re.search(
+              r"^(#{2,3}) \[?Unreleased\]?[ \t]*$", text, re.M | re.I)
           if not heading:
               print("No Unreleased section in CHANGELOG.md, nothing to update")
               sys.exit(0)
           level = len(heading.group(1))
-          next_heading = re.compile(r"^#{1,%d} " % level, re.M).search(text, heading.end())
+          next_heading = re.compile(r"^#{1,%d} " % level, re.M).search(
+              text, heading.end())
           end = next_heading.start() if next_heading else len(text)
           section = text[heading.end():end]
-          bullet = "*" if re.search(r"^\* ", text, re.M) and not re.search(r"^- ", text, re.M) else "-"
+          star_bullets = (re.search(r"^\* ", text, re.M)
+                          and not re.search(r"^- ", text, re.M))
+          bullet = "*" if star_bullets else "-"
 
           new_entries = []
           for dep in deps:
@@ -58,7 +63,9 @@ jobs:
                   dep.get("newVersion") or "?", os.environ["PR_NUMBER"])
               # Replace an earlier entry for the same dependency, e.g. after
               # Dependabot updates the pull request to a newer version
-              existing = re.compile(r"^[-*] Bump %s from .*$" % re.escape(dep["dependencyName"]), re.M)
+              existing = re.compile(
+                  r"^[-*] Bump %s from .*$" % re.escape(dep["dependencyName"]),
+                  re.M)
               if existing.search(section):
                   section = existing.sub(lambda _: entry, section, count=1)
               else:
@@ -68,12 +75,15 @@ jobs:
               subheading = "#" * (level + 1)
               lines = "\n".join(new_entries)
               body = section.lstrip("\n")
-              changed = re.search(r"^%s Changed[ \t]*$" % subheading, section, re.M)
+              changed = re.search(
+                  r"^%s Changed[ \t]*$" % subheading, section, re.M)
               # Follow the changelog's style: "Changed" subsections, or entries
               # listed directly under the version heading
-              uses_subsections = re.search(r"^%s " % subheading, section if body.strip() else text, re.M)
+              uses_subsections = re.search(
+                  r"^%s " % subheading, section if body.strip() else text, re.M)
               if changed:
-                  section = section[:changed.end()] + "\n" + lines + section[changed.end():]
+                  section = (section[:changed.end()] + "\n" + lines
+                             + section[changed.end():])
               elif uses_subsections:
                   section = "\n%s Changed\n%s\n\n%s" % (subheading, lines, body)
               else:
@@ -91,8 +101,9 @@ jobs:
             echo "CHANGELOG.md is already up to date"
             exit 0
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          bot='github-actions[bot]'
+          git config user.name "${bot}"
+          git config user.email "41898282+${bot}@users.noreply.github.com"
           git add CHANGELOG.md
           git commit -m 'Add the Dependabot update to CHANGELOG.md'
           git push origin "HEAD:${HEAD_REF}"
