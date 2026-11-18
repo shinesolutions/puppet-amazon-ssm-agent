@@ -1,0 +1,25 @@
+---
+# Dependabot security updates only, grouped into one pull request per
+# ecosystem instead of one per vulnerable dependency.
+# open-pull-requests-limit: 0 turns off routine version updates; it does not
+# affect security updates, which Dependabot raises when a new alert is found.
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 0
+    groups:
+      bundler-security-updates:
+        applies-to: security-updates
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 0
+    groups:
+      github-actions-security-updates:
+        applies-to: security-updates
+        patterns: ['*']

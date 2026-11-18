@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Add .github/dependabot.yml to group Dependabot security updates into one pull request per ecosystem, with routine version updates off
 - Add a workflow that adds each Dependabot pull request's dependency update to CHANGELOG.md, committed with the workflow's GITHUB_TOKEN
 - Added Amazon Linux 2023 and Rocky Linux 10 support, with systemd Hiera data for both
 - Added unit and acceptance tests (Amazon Linux 2023 and Rocky Linux 10 nodesets) to GitHub CI
