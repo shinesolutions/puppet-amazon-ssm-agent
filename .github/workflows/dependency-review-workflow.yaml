@@ -4,6 +4,12 @@ name: Dependency Review
   pull_request:
 permissions:
   contents: read
+# Cancel a pull request's in-progress review when a newer commit is pushed;
+# github.ref is the pull request's own ref, so other pull requests are not
+# affected
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   dependency-review:
     # Fail a pull request that adds a dependency with a known vulnerability.
