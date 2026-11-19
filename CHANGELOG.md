@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented the known issues found on Amazon Linux 2023 in README.md
 
 ### Changed
+- Bump activesupport from 8.1.4 to 8.1.4.1 (#32)
 - Bump actions/dependency-review-action from 4.9.0 to 5.0.0 (#39)
 - Speed up CI: skip CI for release tags, same-repo pull requests and version bump commits, cancel superseded branch runs, and add job timeouts
 - Make the GitHub Actions workflows' GITHUB_TOKEN read-only
