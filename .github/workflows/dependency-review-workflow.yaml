@@ -6,7 +6,10 @@ permissions:
   contents: read
 jobs:
   dependency-review:
-    # Fail a pull request that adds a dependency with a known vulnerability
+    # Fail a pull request that adds a dependency with a known vulnerability.
+    # Skip the changelog-only commit the Dependabot Changelog workflow pushes:
+    # the dependency change was already reviewed on Dependabot's own commit
+    if: github.actor != 'github-actions[bot]'
     timeout-minutes: 10
     runs-on: ubuntu-26.04
     steps:
