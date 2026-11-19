@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added unit and acceptance tests (Amazon Linux 2023 and Rocky Linux 10 nodesets) to GitHub CI
 - Added Makefile targets for unit tests, acceptance tests, docs and publish checks
 - Documented the known issues found on Amazon Linux 2023 in README.md
+- Added CodeQL code scanning workflow and README badge
 
 ### Changed
 - Speed up CI: skip CI for release tags, same-repo pull requests and version bump commits, cancel superseded branch runs, and add job timeouts
