@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented the known issues found on Amazon Linux 2023 in README.md
 
 ### Changed
+- Skip Dependency Review for the changelog-only commit the Dependabot Changelog workflow pushes, which already ran on Dependabot's own commit
+- Cancel a pull request's in-progress Dependency Review when a newer commit is pushed
 - Bump actions/dependency-review-action from 4.9.0 to 5.0.0 (#39)
 - Speed up CI: skip CI for release tags, same-repo pull requests and version bump commits, cancel superseded branch runs, and add job timeouts
 - Make the GitHub Actions workflows' GITHUB_TOKEN read-only
