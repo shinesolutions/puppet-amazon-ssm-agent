@@ -7,22 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Add .github/dependabot.yml: Ruby gem security updates grouped into one pull request, and GitHub Actions security updates grouped plus weekly grouped version updates with a 7 day cooldown, all with a `deps` commit prefix and `dependencies` label
+- Add a Dependency Review workflow that fails a pull request adding a dependency with a known vulnerability
+- Add a workflow that adds each Dependabot pull request's dependency update to CHANGELOG.md, committed with the workflow's GITHUB_TOKEN
 - Added Amazon Linux 2023 and Rocky Linux 10 support, with systemd Hiera data for both
 - Added unit and acceptance tests (Amazon Linux 2023 and Rocky Linux 10 nodesets) to GitHub CI
 - Added Makefile targets for unit tests, acceptance tests, docs and publish checks
 - Documented the known issues found on Amazon Linux 2023 in README.md
 
 ### Changed
+- Bump activesupport from 8.1.4 to 8.1.4.1 (#32)
+- Skip Dependency Review for the changelog-only commit the Dependabot Changelog workflow pushes, which already ran on Dependabot's own commit
+- Cancel a pull request's in-progress Dependency Review when a newer commit is pushed
+- Bump actions/dependency-review-action from 4.9.0 to 5.0.0 (#39)
+- Speed up CI: skip CI for release tags, same-repo pull requests and version bump commits, cancel superseded branch runs, and add job timeouts
+- Make the GitHub Actions workflows' GITHUB_TOKEN read-only
 - Upgraded to Ruby 4.0.7 and OpenVox 9 with Vox Pupuli tooling, replacing PDK
 - Limited OS support to Amazon Linux 2023 and Rocky Linux 10, and the Puppet requirement to >= 7.0.0 < 10.0.0
 - Changed the puppet/archive and puppetlabs/inifile dependencies to ranges, >= 6.0.0 < 10.0.0 and >= 6.0.0 < 7.0.0
 - Simplify CI, publish and release workflows to not use action files anymore, running in aem-platform-buildenv 6.4.1
 - Changed the parameter docs to puppet-strings tags
 - Fall back to the GWDG mirror of yum.voxpupuli.org for the OpenVox 9 release package and repo in the acceptance nodesets, so an outage of yum.voxpupuli.org does not block CI
-- Upgraded aem-platform-buildenv to 6.5.0, which has RTK 4.4.0
+- Upgraded aem-platform-buildenv to 6.7.0, which has RTK 4.4.0
 - Upgraded release-action to 2.2.0
 
 ### Fixed
+- Fix CI for Dependabot pull requests, which get no Actions secrets: check out with the workflow's read-only GITHUB_TOKEN instead of a secret token
 - Fixed the swapped service_enable and service_ensure parameter descriptions
 - Fixed the syntax error in examples/proxy.pp
 - Fixed README usage, which documented proxy_host and proxy_port parameters that don't exist
