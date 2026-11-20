@@ -4,9 +4,18 @@ name: Dependency Review
   pull_request:
 permissions:
   contents: read
+# Cancel a pull request's in-progress review when a newer commit is pushed;
+# github.ref is the pull request's own ref, so other pull requests are not
+# affected
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   dependency-review:
-    # Fail a pull request that adds a dependency with a known vulnerability
+    # Fail a pull request that adds a dependency with a known vulnerability.
+    # Skip the changelog-only commit the Dependabot Changelog workflow pushes:
+    # the dependency change was already reviewed on Dependabot's own commit
+    if: github.actor != 'github-actions[bot]'
     timeout-minutes: 10
     runs-on: ubuntu-26.04
     steps:
